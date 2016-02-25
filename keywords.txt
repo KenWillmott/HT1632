@@ -1,0 +1,31 @@
+#######################################
+# Syntax Highlighting for HT1632
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+HT1632			KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin			KEYWORD2
+render			KEYWORD2
+clear			KEYWORD2
+fill			KEYWORD2
+drawImage		KEYWORD2
+drawText		KEYWORD2
+setBrightness	KEYWORD2
+setPixel		KEYWORD2
+clearPixel		KEYWORD2
+writePixel		KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+COM_SIZE		LITERAL1
+OUT_SIZE		LITERAL1
