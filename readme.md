@@ -8,7 +8,7 @@ LED display module
   32x8 red LED matrix
   by Ken Willmott, February 17, 2016
 
-  Created by Gaurav Manek, April 8, 2011.
+  Portions created by Gaurav Manek, April 8, 2011.
   Released into the public domain.
 
 

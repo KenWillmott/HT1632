@@ -49,11 +49,17 @@
  * functions go here:
  */
 
+// *********************
+// begin(CS, WR, DATA)
+// Initialize HT1632, assign Arduino pins
+
 void HT1632Class::begin(uint8_t pinCS1, uint8_t pinWR, uint8_t pinDATA) {
 	_numActivePins = 1;
 	_pinCS[0] = pinCS1;
 	initialize(pinWR, pinDATA);
 }
+
+// Low level initialize
 
 void HT1632Class::initialize(uint8_t pinWR, uint8_t pinDATA) {
 	_pinWR = pinWR;
@@ -116,6 +122,11 @@ void HT1632Class::renderTarget(uint8_t target) {
 // JY-MCU modifications
 //
 
+// ************************
+// drawImage(*source_image, width, height, x, y, offset)
+//
+// bit blit from memory to the display
+//
 
 void HT1632Class::drawImage(const byte * img, uint8_t width, uint8_t height, int8_t x, int8_t y, int img_offset)
 {
@@ -144,8 +155,12 @@ void HT1632Class::drawImage(const byte * img, uint8_t width, uint8_t height, int
 }
 // end drawImage
 
+// ****************************************
 // set and clear pixels
 // slightly more efficient than write
+//
+// setPixel(x, y)
+// clearPixel(x, y)
 //
 
 void HT1632Class::setPixel(uint8_t x, uint8_t y) {
@@ -167,6 +182,10 @@ void HT1632Class::clearPixel(uint8_t x, uint8_t y) {
 // JY-MCU added methods
 //
 
+// ********************************
+// writePixel(x, y, value)
+//
+
 void HT1632Class::writePixel(uint8_t x, uint8_t y, uint8_t val)
 {
 	if( x < 0 || x > OUT_SIZE || y < 0 || y > COM_SIZE )
@@ -178,6 +197,11 @@ void HT1632Class::writePixel(uint8_t x, uint8_t y, uint8_t val)
      ((val << PIXELS_PER_BYTE-1) >> (x % PIXELS_PER_BYTE));
 }
 
+// ******************************************************
+// writeChar(column_position, ascii_value, column_width)
+//
+// raw character write allows fine control of position
+// and width
 
 void HT1632Class::writeChar(byte pos, byte val, byte cols)
 {
@@ -189,11 +213,23 @@ void HT1632Class::writeChar(byte pos, byte val, byte cols)
   }
 }
 
+// ****************************************************
+// printChar(character_position, ascii_value)
+//
+// print a character in position 0-3
+// of the display using standard font (cp437)
+
 void HT1632Class::printChar(byte pos, byte val)
 {
   writeChar(pos*8, val, 7);
   setDisplayColumn(pos*8+7, 0);
 }
+
+// *************************************
+// printString(*string)
+//
+// print a standard null terminated string
+// to the display
 
 void HT1632Class::printString(const char* str)
 {
@@ -203,6 +239,12 @@ void HT1632Class::printString(const char* str)
   }
   render();
 }
+
+// *****************************************
+// setDisplayColumn(position, value)
+//
+// set the column at <position> to <value>
+// low bits are at the top, high bits at the bottom
 
 void HT1632Class::setDisplayColumn(byte pos, byte val)
 {
@@ -218,6 +260,13 @@ void HT1632Class::setDisplayColumn(byte pos, byte val)
        }
       }
 }
+
+// ************************************************
+// printNum(long value, byte base)
+//
+// Print the number given by <value>, right justified.
+// Print a minus sign if the number is negative.
+// Numeric base given by <base>
 
 void HT1632Class::printNum(long val, byte base)
 {
@@ -279,6 +328,9 @@ void HT1632Class::printNum(long val, byte base)
 // end of JY-MCU mods
 //***********************************
 
+// ****************************
+// fill() turns on all pixels
+// clear() turns off all pixels
 
 void HT1632Class::fill() {
 	for(uint8_t i = 0; i < ADDR_SPACE_SIZE; ++i) {
@@ -294,7 +346,13 @@ void HT1632Class::clear(){
 	}
 }
 
-// Draw the contents of mem
+//*******************************************
+// render()
+//
+// Draw the contents of memory buffer.
+// Low level graphics operations don't write
+// directly to the screen, but to a buffer.
+// render() must be called to display the buffer.
 
 void HT1632Class::render() {
 	if(_tgtRender >= _numActivePins) {
@@ -318,9 +376,14 @@ void HT1632Class::render() {
 	select(); // Close the stream at the end
 }
 
+// ***********************************************
 
-// Set the brightness to an integer level between 1 and 16 (inclusive).
+// Set the brightness to an integer level
+// between 1 and 16 (inclusive).
 // Uses the PWM feature to set the brightness.
+//
+// setBrightness(brightness)
+
 void HT1632Class::setBrightness(char brightness, char selectionmask) {
 	if(selectionmask == 0b00010000) {
 		if(_tgtRender < _numActivePins) {
@@ -336,6 +399,9 @@ void HT1632Class::setBrightness(char brightness, char selectionmask) {
 	select();
 }
 
+// *******************************************
+// end of anything the user would need to know
+// *******************************************
 
 /*
  * LOWER LEVEL FUNCTIONS
