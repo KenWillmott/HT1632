@@ -16,7 +16,7 @@ unsigned long displayInterval = 100; //0.1s
 
 void setup() {
   //initialize the display
-  LEDmatrix.begin(7, 8, 6);  // CS, WR, DATA
+  LEDmatrix.begin(11, 12, 13);  // CS, WR, DATA
 
 }
 
@@ -56,7 +56,13 @@ void loop()
 
   for (long i = -50; i < 50; i++)
   {
-    LEDmatrix.printNum(i, 10);
+    LEDmatrix.printNum(i, 10, false);
+    delay(100);
+  }
+
+  for (long i = 0; i < 0x0111; i++)
+  {
+    LEDmatrix.printNum(i, 16, true);
     delay(100);
   }
 
@@ -94,7 +100,7 @@ void loop()
   for (int brightness = 1; brightness < 16; brightness++)
   {
     LEDmatrix.setBrightness(brightness);
-    LEDmatrix.printNum(brightness, 10);
+    LEDmatrix.printNum(brightness, 10, true);
     delay(500);
     LEDmatrix.fill();
     LEDmatrix.render(); // This updates the display on the screen.

@@ -25,7 +25,7 @@ is subject to the following license:
  * "THE BEER-WARE LICENSE" (Revision 42):
  * <phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
- * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp
+ * this stuff is worth it, you can buy me a beer in return.   Ken Willmott
  * ----------------------------------------------------------------------------
 
 
@@ -280,14 +280,31 @@ void HT1632Class::setDisplayColumn(byte pos, byte val)
       }
 }
 
+// ********************************************
+// printDigit(byte pos, byte val)
+//
+// print a numeric digit of
+void HT1632Class::printDigit(byte pos, byte val)
+{
+  if (val <= 9)
+  {
+    printChar(pos, val+'0');  // digits to print
+  }
+  else
+  {
+    printChar(pos, val+'A'-10);  // hex and up
+  }
+}
+
 // ************************************************
 // printNum(long value, byte base)
 //
 // Print the number given by <value>, right justified.
 // Print a minus sign if the number is negative.
 // Numeric base given by <base>
+// Leading zeroes if <leading> is set
 
-void HT1632Class::printNum(long val, byte base)
+void HT1632Class::printNum(long val, byte base, bool leading)
 {
   const byte numDigits = 4;
 
@@ -317,7 +334,7 @@ void HT1632Class::printNum(long val, byte base)
     for (int i = numDigits - 1; i >= 0; i--)
     {
       if (posval > 0)
-        printChar(i, (posval % base)+'0');  // digits to print
+        printDigit(i, (posval % base));  // digits to print
       else if (needsMinusSign)
       {
         printChar(i, '-');  // print one minus sign
@@ -333,9 +350,16 @@ void HT1632Class::printNum(long val, byte base)
     for (int i = numDigits - 1; i >= 0; i--)
     {
       if (val > 0 || i == numDigits - 1)
-        printChar(i, (val % base)+'0');  // digits to print
+        printDigit(i, (val % base));  // digits to print
       else
-        printChar(i, ' ');  // the rest are spaces
+        if (leading)
+        {
+          printChar(i, '0');  // the rest are zeroes
+        }
+        else
+        {
+          printChar(i, ' ');  // the rest are spaces
+        }
       val /= base;
     }
   }

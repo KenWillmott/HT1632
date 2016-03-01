@@ -156,8 +156,9 @@ class HT1632Class
     void writePixel(uint8_t x, uint8_t y, uint8_t val);
     void writeChar(byte pos, byte val, byte cols);
     void printChar(byte pos, byte val);
+    void printDigit(byte pos, byte val);
     void printString(const char* str);
-    void printNum(long val, byte base);
+    void printNum(long val, byte base, bool leading);
     void setDisplayColumn(byte pos, byte val);
 
 };
